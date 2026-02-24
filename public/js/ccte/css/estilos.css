@@ -1,0 +1,105 @@
+
+*, body {
+    font-family: arial;
+    font-size: 11px;
+}
+.client-name{
+    color: #666666;
+}
+
+th{
+    text-align: left;
+}
+
+table,td,tr,th{
+    border-collapse: collapse;
+    border: #666666 solid 1px;
+}
+
+td.number{
+    text-align: right;
+}
+.highlight-row {
+    background-color: #c1c6c5;
+}
+
+h3.open a,h4.open a{
+    background-position: 13px -25px;
+}
+
+h4.account-name{
+    font-size:12px;
+}
+
+h1.group-name{
+    font-size: 14px;
+    text-transform: uppercase;
+    color: #000000;
+    text-decoration: none;
+    font-weight: normal;
+    text-shadow: 1px 1px 1px rgb(201, 199, 203);
+}
+
+h2 a {
+    background: url("../img/sprite.png") 15px 13px no-repeat;
+    font-size: 12px;
+    display: block;
+    padding: 10px;
+    padding-left: 32px;
+    margin: 0;
+    color: #000000;
+    text-decoration: none;
+    font-weight: normal;
+    text-shadow: 1px 1px 1px rgb(201, 199, 203);
+}
+
+h2.open a {
+    background-position: 13px -25px;
+}
+
+table {
+    width: 100%;
+    max-width: 960px;
+}
+
+.group-total{
+    margin-left: 32px;
+    width: 100%;
+}
+
+.td-item1{
+    width:10%;
+}
+
+.td-item2{
+    width:auto;
+}
+
+.td-item3{
+    width:10%;
+}
+
+table thead tr th {
+    text-align: center;
+}
+
+.client-box{
+    margin-left:33px;
+}
+
+.highlight-row-black{
+    background: #000000;
+    color:#ffffff;
+}
+
+.group-name {
+    color:#217EBC;
+    text-transform: uppercase;
+    font-weight: bold;
+    font-size: 14px;
+    width: 20%;
+}
+.wrapper{
+    margin-left:20px;
+    margin-bottom:20px;
+}

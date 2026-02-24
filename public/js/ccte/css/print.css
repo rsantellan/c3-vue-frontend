@@ -1,0 +1,12 @@
+.wrapper option, .wrapper select, .wrapper label{
+    display:none;
+}
+
+
+.highlight-row-black{
+    color:#000000;
+}
+.client-box{
+    margin-left:0;
+
+}
