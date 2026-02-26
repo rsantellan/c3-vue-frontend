@@ -131,7 +131,7 @@ const selectedClientIds = computed(() => selectedClients.value.map((c) => c.id))
 
 // filter clients
 const allowedClients = computed(() => {
-  return clients.value.filter((c) => c.permissions.currentAccountData)
+  return clients.value.filter((c) => c.permissions.monthAmount)
 })
 
 // extract ids

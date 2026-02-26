@@ -21,6 +21,19 @@
           <li :class="{ active: isActive('/admin/yearExpiration') }">
             <router-link to="/admin/yearExpiration">Calendario anual</router-link>
           </li>
+
+          <li class="dropdown" :class="{ active: isTasksActive }">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown">Tarea</a>
+
+            <ul class="dropdown-menu">
+              <li :class="{ active: isActive('/admin/createTask') }">
+                <router-link to="/admin/createTask">Crear tarea</router-link>
+              </li>
+              <li :class="{ active: isActive('/admin/viewTasks') }">
+                <router-link to="/admin/viewTasks">Ver tarea</router-link>
+              </li>
+            </ul>
+          </li>
         </ul>
         <ul class="nav pull-right">
           <li class="dropdown usermenu" :class="{ active: route.path.includes('/user') }">
@@ -45,7 +58,7 @@
               <li class="divider"></li>
 
               <!-- 👇 ADMIN -->
-              <template v-if="isAdmin">
+              <template v-if="isAdmin && forceHidden">
                 <li>
                   <router-link to="/admin/users">Listar Usuarios</router-link>
                 </li>
@@ -62,7 +75,7 @@
               </template>
 
               <!-- 👇 BOSS -->
-              <template v-if="isBoss">
+              <template v-if="isBoss && forceHidden">
                 <li>
                   <router-link to="/admin/boss">Listar Usuarios</router-link>
                 </li>
@@ -111,15 +124,13 @@ const fullName = computed(() => {
 
 const isAdmin = computed(() => user.value?.isAdmin)
 const isBoss = computed(() => user.value?.isBoss)
-
+const forceHidden = false
 function logout() {
   clearToken()
   router.push('/login')
 }
 
-const isServiciosActive = computed(() => {
-  return ['/contabilidad', '/seguridad', '/asesoramientos', '/auditoria', '/servicio-notarial'].some((path) =>
-    route.path.startsWith(path),
-  )
+const isTasksActive = computed(() => {
+  return ['/admin/createTask', '/admin/viewTasks'].some((path) => route.path.startsWith(path))
 })
 </script>

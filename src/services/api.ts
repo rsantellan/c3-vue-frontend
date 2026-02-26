@@ -9,6 +9,10 @@ import type { AccountsRequest, AccountsResponse } from '@/types/accounts'
 
 import type { MonthAmountResponse, NormalizedMonthAmount } from '@/types/monthAmount'
 import { mapMonthAmount } from '@/mappers/monthAmountMapper'
+import { ClientExpirationResponse } from '@/types/yearExpiration'
+import { mapExpiration } from '@/mappers/yearExpirationMapper'
+import { CreateTaskRequest, CreateTaskResponse, PublicTask, RetrieveUserTasksRequest, UserTask } from '@/types/task'
+import { ChangePasswordPayload, UpdateProfilePayload } from '@/types/profile'
 
 const API_URL = import.meta.env.VITE_API_URL
 
@@ -119,6 +123,87 @@ export const api = {
       }
 
       return mapMonthAmount(data)
+    })
+  },
+
+  getClientExpiration(clientId: number) {
+    return request(`/get-client-expiration/${clientId}`, {
+      method: 'GET',
+    }).then((data: ClientExpirationResponse) => {
+      if (!data.isvalid) {
+        throw new Error('EXPIRATION_ERROR')
+      }
+
+      return {
+        razonSocial: data.razonsocial,
+        items: mapExpiration(data.data),
+      }
+    })
+  },
+
+  createTaskToClient(payload: CreateTaskRequest) {
+    return request('/create-client-task', {
+      method: 'POST',
+      body: JSON.stringify(payload),
+    }).then((data: CreateTaskResponse) => {
+      return data
+    })
+  },
+  getPublicTasks() {
+    return request('/get-public-available-tasks', {
+      method: 'GET',
+    }).then((data: PublicTask[]) => {
+      return data
+    })
+  },
+  retrieveUserCreatedClientTasks(payload: RetrieveUserTasksRequest) {
+    return request('/retrieve-user-created-client-task', {
+      method: 'POST',
+      body: JSON.stringify(payload),
+    }).then((data: UserTask[]) => {
+      return data
+    })
+  },
+  getProfile() {
+    return request('/profile', {
+      method: 'GET',
+    }).then((data: any) => {
+      return {
+        username: data.username,
+        email: data.email,
+        firstName: data.firstName,
+        lastName: data.lastName,
+        group: data.group,
+        startingDate: data.startingDate,
+        updatedDate: data.lastVisit,
+        state: data.status,
+      }
+    })
+  },
+
+  updateProfile(payload: UpdateProfilePayload) {
+    return request('/profile/update', {
+      method: 'POST',
+      body: JSON.stringify(payload),
+    }).then((data: any) => {
+      if (!data.success) {
+        throw new Error('UPDATE_PROFILE_ERROR')
+      }
+
+      return true
+    })
+  },
+
+  changePassword(payload: ChangePasswordPayload) {
+    return request('/profile/change-password', {
+      method: 'POST',
+      body: JSON.stringify(payload),
+    }).then((data: any) => {
+      if (!data.success) {
+        throw new Error('CHANGE_PASSWORD_ERROR')
+      }
+
+      return true
     })
   },
 }

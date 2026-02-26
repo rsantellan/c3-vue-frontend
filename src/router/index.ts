@@ -16,6 +16,11 @@ import News from '../pages/admin/News.vue'
 import Accounts from '../pages/admin/Accounts.vue'
 import MonthAmount from '../pages/admin/MonthAmount.vue'
 import YearExpiration from '../pages/admin/YearExpiration.vue'
+import CreateTask from '@/pages/admin/CreateTask.vue'
+import ViewTasks from '@/pages/admin/ViewTasks.vue'
+import View from '@/pages/admin/profile/View.vue'
+import Edit from '@/pages/admin/profile/Edit.vue'
+import ChangePassword from '@/pages/admin/profile/ChangePassword.vue'
 
 const routes: RouteRecordRaw[] = [
   // Public
@@ -34,9 +39,11 @@ const routes: RouteRecordRaw[] = [
   { path: '/admin/accounts', component: Accounts, meta: { requiresAuth: true } },
   { path: '/admin/monthAmount', component: MonthAmount, meta: { requiresAuth: true } },
   { path: '/admin/yearExpiration', component: YearExpiration, meta: { requiresAuth: true } },
+  { path: '/admin/createTask', component: CreateTask, meta: { requiresAuth: true } },
+  { path: '/admin/viewTasks', component: ViewTasks, meta: { requiresAuth: true } },
 
-  { path: '/admin/user/profile', component: YearExpiration, meta: { requiresAuth: true } },
-  { path: '/admin/user/profile/edit', component: YearExpiration, meta: { requiresAuth: true } },
+  { path: '/admin/user/profile', component: View, meta: { requiresAuth: true } },
+  { path: '/admin/user/profile/edit', component: Edit, meta: { requiresAuth: true } },
   { path: '/admin/user/profile', component: YearExpiration, meta: { requiresAuth: true } },
 
   // Admin
@@ -44,8 +51,8 @@ const routes: RouteRecordRaw[] = [
   { path: '/admin/user/create', component: Dashboard, meta: { requiresAuth: true, requiresAdmin: true } },
   {
     path: '/admin/user/profile/changepassword',
-    component: Dashboard,
-    meta: { requiresAuth: true, requiresAdmin: true },
+    component: ChangePassword,
+    meta: { requiresAuth: true },
   },
 
   // Admin and Boss
