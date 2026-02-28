@@ -124,7 +124,7 @@ const fullName = computed(() => {
 
 const isAdmin = computed(() => user.value?.isAdmin)
 const isBoss = computed(() => user.value?.isBoss)
-const forceHidden = false
+const forceHidden = true
 function logout() {
   clearToken()
   router.push('/login')

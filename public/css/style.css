@@ -5,7 +5,7 @@ body {
     Open Sans,
     Verdana,
     sans-serif !important;
-  background: url('/images/cheap_diagonal_fabric.png');
+  background: url('../images/cheap_diagonal_fabric.png');
 }
 #wrapper-main {
   box-shadow: 0px #aaa;
@@ -88,7 +88,7 @@ header .login-box i.user_ico {
   width: 16px;
   height: 16px;
   margin-top: 2px;
-  background-image: url('/images/icons.png');
+  background-image: url('../images/icons.png');
   background-position: -16px 0px;
 }
 header .login-box i.pass_ico {
@@ -96,7 +96,7 @@ header .login-box i.pass_ico {
   width: 16px;
   height: 16px;
   margin-top: 2px;
-  background-image: url('/images/icons.png');
+  background-image: url('../images/icons.png');
 }
 header .login-box i.icon-go_ico,
 header .login-box i.go_ico {
@@ -104,7 +104,7 @@ header .login-box i.go_ico {
   width: 14px;
   height: 14px;
   margin: 0;
-  background-image: url('/images/icons.png');
+  background-image: url('../images/icons.png');
   background-position: 0px -16px;
 }
 header .login-box fieldset {
@@ -209,7 +209,7 @@ nav.navbar .navbar-inner .btn-navbar {
   color: #000;
 }
 nav.navbar .navbar-inner .menu-arrow {
-  background-image: url('/images/icons.png');
+  background-image: url('../images/icons.png');
   background-position: -48px 0px;
   width: 16px;
   height: 16px;
@@ -231,7 +231,7 @@ nav.navbar .navbar-inner .nav i.caret {
   height: 16px;
   border: none;
   margin: 6px 0 0 0;
-  background-image: url('/images/icons.png');
+  background-image: url('../images/icons.png');
   background-position: -16px -16px;
 }
 nav.navbar .navbar-inner .nav li a {
@@ -403,7 +403,7 @@ article.main .hgroup h1 {
   margin-bottom: 20px;
   font-weight: 300;
   padding-left: 30px;
-  background: url('/images/line_title.gif') left center no-repeat;
+  background: url('../images/line_title.gif') left center no-repeat;
   background-size: 2%;
 }
 article.main .hgroup h1:first-child {
@@ -479,7 +479,7 @@ article.main div.title-monthamount {
   margin-top: 0;
 }
 i.arrow {
-  background-image: url('/images/icons2.png');
+  background-image: url('../images/icons2.png');
   background-position: -48px 0px;
   width: 16px;
   height: 16px;
@@ -625,7 +625,7 @@ article.main .contact-box h4 {
   line-height: 42px;
   padding-left: 20px;
   margin-top: 0px;
-  background: #022698 url('/images/background_contact.jpg') no-repeat;
+  background: #022698 url('../images/background_contact.jpg') no-repeat;
 }
 article.main .contact-box .mtxt,
 article.main .contact-box .ltxt,
@@ -787,7 +787,7 @@ footer .copyright {
 }
 footer .box {
   display: block;
-  background: url(/images/footer_image.jpg);
+  background: url(../images/footer_image.jpg);
   padding: 14px;
   font-size: 14px;
   margin-left: 10px;
@@ -926,7 +926,7 @@ footer .box .contact-info {
   padding-left: 20px;
 }
 .header_bg {
-  background: url(/images/background_top.jpg);
+  background: url(../images/background_top.jpg);
 }
 .carousel-caption {
   left: 46%;
@@ -946,7 +946,7 @@ footer .box .contact-info {
 }
 
 .icon1_index {
-  background: url(/images/icono_home1.png) 50% no-repeat;
+  background: url(../images/icono_home1.png) 50% no-repeat;
   height: 58px;
   width: 58px;
   margin: 0 auto;
@@ -956,7 +956,7 @@ footer .box .contact-info {
   background-size: 80%;
 }
 .icon2_index {
-  background: url(/images/icono_home2.png) 50% no-repeat;
+  background: url(../images/icono_home2.png) 50% no-repeat;
   height: 58px;
   width: 58px;
   margin: 0 auto;
@@ -966,7 +966,7 @@ footer .box .contact-info {
   background-size: 80%;
 }
 .icon3_index {
-  background: url(/images/icono_home3.png) 50% no-repeat;
+  background: url(../images/icono_home3.png) 50% no-repeat;
   height: 58px;
   width: 58px;
   margin: 0 auto;
@@ -976,7 +976,7 @@ footer .box .contact-info {
   background-size: 80%;
 }
 .icon4_index {
-  background: url(/images/icono_home4.png) 50% no-repeat;
+  background: url(../images/icono_home4.png) 50% no-repeat;
   height: 58px;
   width: 58px;
   margin: 0 auto;
@@ -986,7 +986,7 @@ footer .box .contact-info {
   background-size: 80%;
 }
 .icon5_index {
-  background: url(/images/icono_home5.png) 50% no-repeat;
+  background: url(../images/icono_home5.png) 50% no-repeat;
   height: 58px;
   width: 58px;
   margin: 0 auto;
@@ -996,7 +996,7 @@ footer .box .contact-info {
   background-size: 80%;
 }
 .icon6_index {
-  background: url(/images/icono_home6.png) 50% no-repeat;
+  background: url(../images/icono_home6.png) 50% no-repeat;
   height: 58px;
   width: 58px;
   margin: 0 auto;
@@ -1006,7 +1006,7 @@ footer .box .contact-info {
   background-size: 80%;
 }
 .icon7_index {
-  background: url(/images/icono_home7.png) 50% no-repeat;
+  background: url(../images/icono_home7.png) 50% no-repeat;
   height: 58px;
   width: 58px;
   margin: 0 auto;
@@ -1016,7 +1016,7 @@ footer .box .contact-info {
   background-size: 80%;
 }
 .icon8_index {
-  background: url(/images/icono_home8.png) 50% no-repeat;
+  background: url(../images/icono_home8.png) 50% no-repeat;
   height: 58px;
   width: 58px;
   margin: 0 auto;
@@ -1026,7 +1026,7 @@ footer .box .contact-info {
   background-size: 80%;
 }
 .icon9_index {
-  background: url(/images/icono_home9.png) 50% no-repeat;
+  background: url(../images/icono_home9.png) 50% no-repeat;
   height: 58px;
   width: 58px;
   margin: 0 auto;
@@ -1036,7 +1036,7 @@ footer .box .contact-info {
   background-size: 80%;
 }
 .icon10_index {
-  background: url(/images/icono_home10.png) 50% no-repeat;
+  background: url(../images/icono_home10.png) 50% no-repeat;
   height: 58px;
   width: 58px;
   margin: 0 auto;

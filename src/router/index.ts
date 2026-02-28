@@ -22,6 +22,11 @@ import View from '@/pages/admin/profile/View.vue'
 import Edit from '@/pages/admin/profile/Edit.vue'
 import ChangePassword from '@/pages/admin/profile/ChangePassword.vue'
 
+import Users from '@/pages/admin/manage/Users.vue'
+import ShowProfile from '@/pages/admin/manage/ShowProfile.vue'
+import EditProfile from '@/pages/admin/manage/EditProfile.vue'
+import CreateUser from '@/pages/admin/manage/CreateUser.vue'
+
 const routes: RouteRecordRaw[] = [
   // Public
   { path: '/', component: Home },
@@ -47,14 +52,25 @@ const routes: RouteRecordRaw[] = [
   { path: '/admin/user/profile', component: YearExpiration, meta: { requiresAuth: true } },
 
   // Admin
-  { path: '/admin/users', component: Dashboard, meta: { requiresAuth: true, requiresAdmin: true } },
-  { path: '/admin/user/create', component: Dashboard, meta: { requiresAuth: true, requiresAdmin: true } },
+  { path: '/admin/users', component: Users, meta: { requiresAuth: true, requiresAdmin: true } },
+  { path: '/admin/user/create', component: CreateUser, meta: { requiresAuth: true, requiresAdmin: true } },
   {
     path: '/admin/user/profile/changepassword',
     component: ChangePassword,
     meta: { requiresAuth: true },
   },
-
+  {
+    path: '/admin/user/:id',
+    name: 'admin-user-show',
+    component: ShowProfile,
+    meta: { requiresAuth: true, requiresAdmin: true },
+  },
+  {
+    path: '/admin/user/edit/:id',
+    name: 'admin-user-edit',
+    component: EditProfile,
+    meta: { requiresAuth: true, requiresAdmin: true },
+  },
   // Admin and Boss
   {
     path: '/admin/permissions',
@@ -66,9 +82,10 @@ const routes: RouteRecordRaw[] = [
   { path: '/admin/boss', component: Dashboard, meta: { requiresAuth: true, requiresBoss: true } },
   { path: '/admin/boss/create', component: Dashboard, meta: { requiresAuth: true, requiresBoss: true } },
 ]
+const base = import.meta.env.VITE_BASE_URL || '/'
 
 const router = createRouter({
-  history: createWebHistory(),
+  history: createWebHistory(base),
   routes,
 })
 

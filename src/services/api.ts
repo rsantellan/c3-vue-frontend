@@ -14,6 +14,9 @@ import { mapExpiration } from '@/mappers/yearExpirationMapper'
 import { CreateTaskRequest, CreateTaskResponse, PublicTask, RetrieveUserTasksRequest, UserTask } from '@/types/task'
 import { ChangePasswordPayload, UpdateProfilePayload } from '@/types/profile'
 
+import type { UsersRequest, UsersResponse, User, AdminGroup, AdminClientApi, AdminUserForm } from '@/types/user'
+import { mapApiUser, mapAdminClient } from '@/mappers/apiUserMapper'
+
 const API_URL = import.meta.env.VITE_API_URL
 
 function getHeaders(): HeadersInit {
@@ -175,7 +178,24 @@ export const api = {
         lastName: data.lastName,
         group: data.group,
         startingDate: data.startingDate,
-        updatedDate: data.lastVisit,
+        lastVisit: data.lastVisit,
+        state: data.status,
+      }
+    })
+  },
+
+  getUserProfileById(id: number) {
+    return request(`/admin/profile/${id}`, {
+      method: 'GET',
+    }).then((data: any) => {
+      return {
+        username: data.username,
+        email: data.email,
+        firstName: data.firstName,
+        lastName: data.lastName,
+        group: data.group,
+        startingDate: data.startingDate,
+        lastVisit: data.lastVisit,
         state: data.status,
       }
     })
@@ -194,6 +214,19 @@ export const api = {
     })
   },
 
+  updateUser(id: number, payload: UpdateProfilePayload) {
+    return request(`/admin/profile-update/${id}`, {
+      method: 'POST',
+      body: JSON.stringify(payload),
+    }).then((data: any) => {
+      if (!data.success) {
+        throw new Error('UPDATE_PROFILE_ERROR')
+      }
+
+      return true
+    })
+  },
+
   changePassword(payload: ChangePasswordPayload) {
     return request('/profile/change-password', {
       method: 'POST',
@@ -201,6 +234,75 @@ export const api = {
     }).then((data: any) => {
       if (!data.success) {
         throw new Error('CHANGE_PASSWORD_ERROR')
+      }
+
+      return true
+    })
+  },
+
+  getUsers(payload: UsersRequest): Promise<{ users: User[]; total: number }> {
+    return request('/users', {
+      method: 'POST',
+      body: JSON.stringify(payload),
+    }).then((data: UsersResponse) => {
+      return {
+        users: data.data.users.map(mapApiUser),
+        total: Number(data.data.quantity),
+      }
+    })
+  },
+
+  removeUser(id: number) {
+    return request(`/admin/profile/${id}`, {
+      method: 'DELETE',
+    }).then((data: any) => {
+      if (!data.success) {
+        throw new Error('REMOVE_PROFILE_ERROR')
+      }
+
+      return true
+    })
+  },
+
+  getUserStatusOptions() {
+    return [
+      {
+        code: 0,
+        name: 'Inactivo',
+      },
+      {
+        code: 1,
+        name: 'Activo',
+      },
+      {
+        code: -1,
+        name: 'Bloqueado',
+      },
+    ]
+  },
+
+  getAdminGroups() {
+    return request('/admin/get-groups', {
+      method: 'GET',
+    }).then((data: AdminGroup[]) => {
+      return data
+    })
+  },
+
+  getAdminClients() {
+    return request('/admin/get-clients', {
+      method: 'GET',
+    }).then((data: AdminClientApi[]) => {
+      return data.map(mapAdminClient)
+    })
+  },
+  createUser(payload: AdminUserForm) {
+    return request(`/admin/profile-create-user`, {
+      method: 'POST',
+      body: JSON.stringify(payload),
+    }).then((data: any) => {
+      if (!data.success) {
+        throw new Error('CREATE_USER_ERROR')
       }
 
       return true
