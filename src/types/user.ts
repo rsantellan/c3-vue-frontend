@@ -62,11 +62,67 @@ export interface AdminGroup {
 }
 
 export interface AdminClientApi {
-  id: number
+  id: string
   social_reason: string
+  folder_number: string
+  groupId?: number
+  groupName?: string
+  groupCode?: string
 }
 
 export interface AdminClient {
-  id: number
+  id: string
   socialReason: string
+  folder: string
+  groupId?: number
+  groupName?: string
+  groupCode?: string
+}
+
+export interface AdminPermissionType {
+  name: string
+  description: string
+}
+
+export interface UserPermissionResponse {
+  success: boolean
+  message: string
+  data: UserPermission[]
+}
+
+export interface UserPermission {
+  type: string
+  data: UserPermissionClient[]
+}
+
+export interface UserPermissionClient {
+  id: number
+  folder: string
+}
+
+export interface UserPermissionApiResponse {
+  data: UserWithPermissions[]
+  pagination: {
+    page: number
+    perPage: number
+    total: number
+  }
+}
+
+export interface UserPermissionSummary {
+  type: string
+  name: string
+  description: string
+}
+
+export interface UserWithPermissions {
+  id: number
+  username: string
+  permissions: UserPermissionSummary[]
+}
+
+export interface UserPermissionApiRequest {
+  page: number
+  perPage: number
+  search: string
 }

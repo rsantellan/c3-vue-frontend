@@ -26,6 +26,8 @@ import Users from '@/pages/admin/manage/Users.vue'
 import ShowProfile from '@/pages/admin/manage/ShowProfile.vue'
 import EditProfile from '@/pages/admin/manage/EditProfile.vue'
 import CreateUser from '@/pages/admin/manage/CreateUser.vue'
+import PermissionUser from '@/pages/admin/manage/PermissionUser.vue'
+import UsersPermissions from '@/pages/admin/manage/UsersPermissions.vue'
 
 const routes: RouteRecordRaw[] = [
   // Public
@@ -74,10 +76,15 @@ const routes: RouteRecordRaw[] = [
   // Admin and Boss
   {
     path: '/admin/permissions',
-    component: Dashboard,
+    component: UsersPermissions,
     meta: { requiresAuth: true, requiresAdmin: true, requiresBoss: true },
   },
-
+  {
+    path: '/admin/permission/edit/:id',
+    name: 'admin-permission-edit',
+    component: PermissionUser,
+    meta: { requiresAuth: true, requiresAdmin: true, requiresBoss: true },
+  },
   // Boss
   { path: '/admin/boss', component: Dashboard, meta: { requiresAuth: true, requiresBoss: true } },
   { path: '/admin/boss/create', component: Dashboard, meta: { requiresAuth: true, requiresBoss: true } },

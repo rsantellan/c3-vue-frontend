@@ -14,7 +14,18 @@ import { mapExpiration } from '@/mappers/yearExpirationMapper'
 import { CreateTaskRequest, CreateTaskResponse, PublicTask, RetrieveUserTasksRequest, UserTask } from '@/types/task'
 import { ChangePasswordPayload, UpdateProfilePayload } from '@/types/profile'
 
-import type { UsersRequest, UsersResponse, User, AdminGroup, AdminClientApi, AdminUserForm } from '@/types/user'
+import type {
+  UsersRequest,
+  UsersResponse,
+  User,
+  AdminGroup,
+  AdminClientApi,
+  AdminUserForm,
+  AdminPermissionType,
+  UserPermissionResponse,
+  UserPermissionApiResponse,
+  UserPermissionApiRequest,
+} from '@/types/user'
 import { mapApiUser, mapAdminClient } from '@/mappers/apiUserMapper'
 
 const API_URL = import.meta.env.VITE_API_URL
@@ -241,7 +252,7 @@ export const api = {
   },
 
   getUsers(payload: UsersRequest): Promise<{ users: User[]; total: number }> {
-    return request('/users', {
+    return request('/admin/users', {
       method: 'POST',
       body: JSON.stringify(payload),
     }).then((data: UsersResponse) => {
@@ -306,6 +317,68 @@ export const api = {
       }
 
       return true
+    })
+  },
+
+  getPermissionTypes() {
+    return request('/admin/get-permission-types', {
+      method: 'GET',
+    }).then((data: AdminPermissionType[]) => {
+      return data
+    })
+  },
+
+  getUserPermissions(id: number) {
+    return request(`/admin/profile/permissions/${id}`, {
+      method: 'GET',
+    }).then((data: UserPermissionResponse) => {
+      if (!data.success) {
+        throw new Error('GET_USER_PERMISSION_ERROR')
+      }
+      return data.data
+    })
+  },
+  assignPermission(userId: number, type: string, folder: string) {
+    const payload = {
+      userId: userId,
+      type: type,
+      folder: folder,
+    }
+    return request('/admin/profile/permission/assign', {
+      method: 'POST',
+      body: JSON.stringify(payload),
+    }).then((data: any) => {
+      if (!data.success) {
+        throw new Error('ASSIGN_PROFILE_TO_USER_ERROR')
+      }
+
+      return true
+    })
+  },
+  removePermission(userId: number, type: string, folder: string) {
+    const payload = {
+      userId: userId,
+      type: type,
+      folder: folder,
+    }
+    return request('/admin/profile/permission/remove', {
+      method: 'POST',
+      body: JSON.stringify(payload),
+    }).then((data: any) => {
+      if (!data.success) {
+        throw new Error('REMOVE_ASSIGN_PROFILE_TO_USER_ERROR')
+      }
+
+      return true
+    })
+  },
+
+  getUsersWithPermissions(payload: UserPermissionApiRequest) {
+    return request('/admin/users-with-permissions', {
+      method: 'POST',
+      body: JSON.stringify(payload),
+    }).then((data: UserPermissionApiResponse) => {
+      return data
     })
   },
 }

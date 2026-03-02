@@ -57,13 +57,13 @@
               <a class="delete" title="Borrar" rel="tooltip" @click="deleteUser(user)">
                 <i class="icon-trash"></i>
               </a>
-              <a
+              <router-link
+                class="permission"
+                :to="{ name: 'admin-permission-edit', params: { id: user.id } }"
                 title="Editar Permisos"
-                rel="tooltip"
-                href="https://www.estudiocontable.com.uy/sitio/index.php/auth/assignment/view/id/49"
               >
                 <i class="icon-lock"></i>
-              </a>
+              </router-link>
             </td>
           </tr>
         </tbody>

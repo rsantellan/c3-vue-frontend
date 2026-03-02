@@ -16,5 +16,9 @@ export function mapAdminClient(apiClient: AdminClientApi): AdminClient {
   return {
     id: apiClient.id,
     socialReason: apiClient.social_reason,
+    folder: apiClient.folder_number,
+    groupId: apiClient.groupId,
+    groupName: apiClient.groupName,
+    groupCode: apiClient.groupCode,
   }
 }
