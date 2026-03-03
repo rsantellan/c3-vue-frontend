@@ -25,6 +25,7 @@ import type {
   UserPermissionResponse,
   UserPermissionApiResponse,
   UserPermissionApiRequest,
+  UserWithPermissions,
 } from '@/types/user'
 import { mapApiUser, mapAdminClient } from '@/mappers/apiUserMapper'
 
@@ -212,6 +213,23 @@ export const api = {
     })
   },
 
+  getUserProfileByIdBoss(id: number) {
+    return request(`/admin/profile-boss/${id}`, {
+      method: 'GET',
+    }).then((data: any) => {
+      return {
+        username: data.username,
+        email: data.email,
+        firstName: data.firstName,
+        lastName: data.lastName,
+        group: data.group,
+        startingDate: data.startingDate,
+        lastVisit: data.lastVisit,
+        state: data.status,
+      }
+    })
+  },
+
   updateProfile(payload: UpdateProfilePayload) {
     return request('/profile/update', {
       method: 'POST',
@@ -227,6 +245,19 @@ export const api = {
 
   updateUser(id: number, payload: UpdateProfilePayload) {
     return request(`/admin/profile-update/${id}`, {
+      method: 'POST',
+      body: JSON.stringify(payload),
+    }).then((data: any) => {
+      if (!data.success) {
+        throw new Error('UPDATE_PROFILE_ERROR')
+      }
+
+      return true
+    })
+  },
+
+  updateUserBoss(id: number, payload: UpdateProfilePayload) {
+    return request(`/admin/boss-profile-update/${id}`, {
       method: 'POST',
       body: JSON.stringify(payload),
     }).then((data: any) => {
@@ -275,6 +306,30 @@ export const api = {
     })
   },
 
+  getUsersBoss(payload: UsersRequest): Promise<{ users: User[]; total: number }> {
+    return request('/admin/users-boss', {
+      method: 'POST',
+      body: JSON.stringify(payload),
+    }).then((data: UsersResponse) => {
+      return {
+        users: data.data.users.map(mapApiUser),
+        total: Number(data.data.quantity),
+      }
+    })
+  },
+
+  removeUserBoss(id: number) {
+    return request(`/admin/profile-boss/${id}`, {
+      method: 'DELETE',
+    }).then((data: any) => {
+      if (!data.success) {
+        throw new Error('REMOVE_PROFILE_ERROR')
+      }
+
+      return true
+    })
+  },
+
   getUserStatusOptions() {
     return [
       {
@@ -307,6 +362,15 @@ export const api = {
       return data.map(mapAdminClient)
     })
   },
+
+  getAdminClientsBoss() {
+    return request('/admin/boss-get-clients', {
+      method: 'GET',
+    }).then((data: AdminClientApi[]) => {
+      return data.map(mapAdminClient)
+    })
+  },
+
   createUser(payload: AdminUserForm) {
     return request(`/admin/profile-create-user`, {
       method: 'POST',
@@ -315,7 +379,18 @@ export const api = {
       if (!data.success) {
         throw new Error('CREATE_USER_ERROR')
       }
+      return true
+    })
+  },
 
+  createUserBoss(payload: AdminUserForm) {
+    return request(`/admin/boss-profile-create-user`, {
+      method: 'POST',
+      body: JSON.stringify(payload),
+    }).then((data: any) => {
+      if (!data.success) {
+        throw new Error('CREATE_USER_ERROR')
+      }
       return true
     })
   },
@@ -338,6 +413,18 @@ export const api = {
       return data.data
     })
   },
+
+  getUserPermissionsBoss(id: number) {
+    return request(`/admin/boss/profile/permissions/${id}`, {
+      method: 'GET',
+    }).then((data: UserPermissionResponse) => {
+      if (!data.success) {
+        throw new Error('GET_USER_PERMISSION_ERROR')
+      }
+      return data.data
+    })
+  },
+
   assignPermission(userId: number, type: string, folder: string) {
     const payload = {
       userId: userId,
@@ -355,6 +442,25 @@ export const api = {
       return true
     })
   },
+
+  assignPermissionBoss(userId: number, type: string, folder: string) {
+    const payload = {
+      userId: userId,
+      type: type,
+      folder: folder,
+    }
+    return request('/admin/boss/profile/permission/assign', {
+      method: 'POST',
+      body: JSON.stringify(payload),
+    }).then((data: any) => {
+      if (!data.success) {
+        throw new Error('ASSIGN_PROFILE_TO_USER_ERROR')
+      }
+
+      return true
+    })
+  },
+
   removePermission(userId: number, type: string, folder: string) {
     const payload = {
       userId: userId,
@@ -373,11 +479,47 @@ export const api = {
     })
   },
 
+  removePermissionBoss(userId: number, type: string, folder: string) {
+    const payload = {
+      userId: userId,
+      type: type,
+      folder: folder,
+    }
+    return request('/admin/boss/profile/permission/remove', {
+      method: 'POST',
+      body: JSON.stringify(payload),
+    }).then((data: any) => {
+      if (!data.success) {
+        throw new Error('REMOVE_ASSIGN_PROFILE_TO_USER_ERROR')
+      }
+
+      return true
+    })
+  },
+
   getUsersWithPermissions(payload: UserPermissionApiRequest) {
     return request('/admin/users-with-permissions', {
       method: 'POST',
       body: JSON.stringify(payload),
     }).then((data: UserPermissionApiResponse) => {
+      return data
+    })
+  },
+
+  getUsersWithPermissionsBoss(payload: UserPermissionApiRequest) {
+    return request('/admin/boss-users-with-permissions', {
+      method: 'POST',
+      body: JSON.stringify(payload),
+    }).then((data: UserPermissionApiResponse) => {
+      return data
+    })
+  },
+
+  getUsersPermissionsByClient(id: string) {
+    return request(`/admin/users-permissions-by-client/${id}`, {
+      method: 'GET',
+    }).then((data: UserWithPermissions[]) => {
+      console.log(data)
       return data
     })
   },

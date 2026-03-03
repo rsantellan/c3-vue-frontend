@@ -28,6 +28,14 @@ import EditProfile from '@/pages/admin/manage/EditProfile.vue'
 import CreateUser from '@/pages/admin/manage/CreateUser.vue'
 import PermissionUser from '@/pages/admin/manage/PermissionUser.vue'
 import UsersPermissions from '@/pages/admin/manage/UsersPermissions.vue'
+import PermissionPerClient from '@/pages/admin/manage/PermissionPerClient.vue'
+
+import BossUsers from '@/pages/admin/boss/BossUsers.vue'
+import BossShowProfile from '@/pages/admin/boss/BossShowProfile.vue'
+import BossEditProfile from '@/pages/admin/boss/BossEditProfile.vue'
+import BossPermissionUser from '@/pages/admin/boss/BossPermissionUser.vue'
+import BossUsersPermissions from '@/pages/admin/boss/BossUsersPermissions.vue'
+import BossCreateUser from '@/pages/admin/boss/BossCreateUser.vue'
 
 const routes: RouteRecordRaw[] = [
   // Public
@@ -73,21 +81,54 @@ const routes: RouteRecordRaw[] = [
     component: EditProfile,
     meta: { requiresAuth: true, requiresAdmin: true },
   },
+  {
+    path: '/admin/clients/permissions',
+    name: 'admin-clients-permissions',
+    component: PermissionPerClient,
+    meta: { requiresAuth: true, requiresAdmin: true },
+  },
+
   // Admin and Boss
   {
     path: '/admin/permissions',
     component: UsersPermissions,
-    meta: { requiresAuth: true, requiresAdmin: true, requiresBoss: true },
+    meta: { requiresAuth: true, requiresAdmin: true, requiresBoss: false },
   },
   {
     path: '/admin/permission/edit/:id',
     name: 'admin-permission-edit',
     component: PermissionUser,
-    meta: { requiresAuth: true, requiresAdmin: true, requiresBoss: true },
+    meta: { requiresAuth: true, requiresAdmin: true, requiresBoss: false },
   },
   // Boss
-  { path: '/admin/boss', component: Dashboard, meta: { requiresAuth: true, requiresBoss: true } },
-  { path: '/admin/boss/create', component: Dashboard, meta: { requiresAuth: true, requiresBoss: true } },
+  { path: '/admin/boss/users', component: BossUsers, meta: { requiresAuth: true, requiresBoss: true } },
+
+  {
+    path: '/admin/boss/user/:id',
+    name: 'boss-user-show',
+    component: BossShowProfile,
+    meta: { requiresAuth: true, requiresBoss: true },
+  },
+  {
+    path: '/admin/boss/user/edit/:id',
+    name: 'boss-user-edit',
+    component: BossEditProfile,
+    meta: { requiresAuth: true, requiresBoss: true },
+  },
+  {
+    path: '/admin/boss/permission/edit/:id',
+    name: 'boss-permission-edit',
+    component: BossPermissionUser,
+    meta: { requiresAuth: true, requiresBoss: true },
+  },
+
+  {
+    path: '/admin/boss/permissions',
+    component: BossUsersPermissions,
+    meta: { requiresAuth: true, requiresBoss: true },
+  },
+
+  { path: '/admin/boss/create', component: BossCreateUser, meta: { requiresAuth: true, requiresBoss: true } },
 ]
 const base = import.meta.env.VITE_BASE_URL || '/'
 

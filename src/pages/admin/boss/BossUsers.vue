@@ -1,11 +1,11 @@
 <template>
   <UsersList
-    :fetchUsers="api.getUsers"
-    :deleteUser="api.removeUser"
+    :fetchUsers="api.getUsersBoss"
+    :deleteUser="api.removeUserBoss"
     :routes="{
-      show: 'admin-user-show',
-      edit: 'admin-user-edit',
-      permissions: 'admin-permission-edit',
+      show: 'boss-user-show',
+      edit: 'boss-user-edit',
+      permissions: 'boss-permission-edit',
     }"
   />
 </template>

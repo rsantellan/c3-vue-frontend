@@ -2,10 +2,10 @@
   <UserPermission
     :userId="userId"
     :getPermissionTypes="api.getPermissionTypes"
-    :getClients="api.getAdminClients"
-    :getUserPermissions="api.getUserPermissions"
-    :assignPermission="api.assignPermission"
-    :removePermission="api.removePermission"
+    :getClients="api.getAdminClientsBoss"
+    :getUserPermissions="api.getUserPermissionsBoss"
+    :assignPermission="api.assignPermissionBoss"
+    :removePermission="api.removePermissionBoss"
   />
 </template>
 

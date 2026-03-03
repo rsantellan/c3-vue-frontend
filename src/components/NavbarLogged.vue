@@ -69,7 +69,7 @@
                   <router-link to="/admin/permissions">Permisos</router-link>
                 </li>
                 <li>
-                  <router-link to="/admin/business">Razones sociales</router-link>
+                  <router-link to="/admin/clients/permissions">Razones sociales</router-link>
                 </li>
                 <li class="divider"></li>
               </template>
@@ -77,13 +77,13 @@
               <!-- 👇 BOSS -->
               <template v-if="isBoss && forceHidden">
                 <li>
-                  <router-link to="/admin/boss">Listar Usuarios</router-link>
+                  <router-link to="/admin/boss/users">Listar Usuarios</router-link>
                 </li>
                 <li>
                   <router-link to="/admin/boss/create">Nuevo Usuario</router-link>
                 </li>
                 <li>
-                  <router-link to="/admin/permissions">Permisos</router-link>
+                  <router-link to="/admin/boss/permissions">Permisos</router-link>
                 </li>
                 <li class="divider"></li>
               </template>

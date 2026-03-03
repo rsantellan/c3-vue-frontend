@@ -1,7 +1,7 @@
 <template>
   <UserPermissionList
     title="Usuarios y Permisos"
-    :fetchFunction="api.getUsersWithPermissions"
+    :fetchFunction="api.getUsersWithPermissionsBoss"
     :getUserLink="(id) => ({ name: 'admin-user-edit', params: { id } })"
   />
 </template>
