@@ -77,6 +77,60 @@ async function request(endpoint: string, options: RequestInit = {}) {
   return data
 }
 
+async function download(endpoint: string, filename: string | null = null) {
+  const response = await fetch(`${API_URL}${endpoint}`, {
+    method: 'GET',
+    headers: {
+      ...getHeaders(),
+    },
+  })
+
+  if (response.status === 401) {
+    clearToken()
+
+    if (router.currentRoute.value.path !== '/login') {
+      router.push('/login')
+    }
+
+    throw new Error('UNAUTHORIZED')
+  }
+
+  if (response.status === 404) {
+    throw new Error('FILE_NOT_FOUND')
+  }
+
+  if (!response.ok) {
+    throw new Error(`HTTP ${response.status}`)
+  }
+
+  const blob = await response.blob()
+
+  // try to get filename from header
+  const disposition = response.headers.get('Content-Disposition')
+  if (!filename && disposition) {
+    const match = disposition.match(/filename="?([^"]+)"?/)
+    console.log(match)
+    if (match && match[1]) {
+      filename = match[1]
+    }
+  }
+
+  if (!filename) {
+    filename = 'download'
+  }
+
+  const url = window.URL.createObjectURL(blob)
+
+  const a = document.createElement('a')
+  a.href = url
+  a.download = filename
+  document.body.appendChild(a)
+  a.click()
+  a.remove()
+
+  window.URL.revokeObjectURL(url)
+}
+
 export const api = {
   // 🔐 Auth
   login(username: string, password: string) {
@@ -171,6 +225,11 @@ export const api = {
       return data
     })
   },
+
+  getPublicTaskFile(taskId: number, fileId: number) {
+    return download(`/${taskId}/${fileId}/get-public-task-file`)
+  },
+
   retrieveUserCreatedClientTasks(payload: RetrieveUserTasksRequest) {
     return request('/retrieve-user-created-client-task', {
       method: 'POST',
@@ -519,7 +578,16 @@ export const api = {
     return request(`/admin/users-permissions-by-client/${id}`, {
       method: 'GET',
     }).then((data: UserWithPermissions[]) => {
-      console.log(data)
+      return data
+    })
+  },
+
+  addCommentToTask(taskId: number, comment: string, user: string) {
+    const payload = { taskId: taskId, comment: comment, createdBy: user }
+    return request('/add-comment-to-task', {
+      method: 'POST',
+      body: JSON.stringify(payload),
+    }).then((data: any) => {
       return data
     })
   },

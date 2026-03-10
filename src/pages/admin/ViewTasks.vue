@@ -2,13 +2,22 @@
 import { ref, onMounted } from 'vue'
 import { api } from '@/services/api'
 import { user } from '@/auth'
-import { RetrieveUserTasksRequest, UserTask } from '@/types/task'
+import { RetrieveUserTasksRequest, TaskTimeLine, UserTask } from '@/types/task'
+import TaskTimeline from '@/components/TaskTimeline.vue'
 
 // ================= STATE =================
 const tasks = ref<UserTask[]>([])
 const loading = ref(false)
 const error = ref<string | null>(null)
+const expanded = ref<number | null>(null)
 
+function formatDate(date: string): string {
+  return new Date(date).toLocaleDateString('es-UY', {
+    day: 'numeric',
+    month: 'short',
+    year: 'numeric',
+  })
+}
 // ================= API =================
 async function fetchTasks() {
   loading.value = true
@@ -28,6 +37,59 @@ async function fetchTasks() {
   }
 }
 
+function toggle(task: UserTask) {
+  if (expanded.value === task.id) return
+  calculateTimeLine(task)
+  expanded.value = task.id
+}
+
+function calculateTimeLine(task: UserTask) {
+  const newTimeline: TaskTimeLine[] = []
+  task.publicComment.forEach((comment) => {
+    newTimeline.push({
+      id: comment.id,
+      fileName: '',
+      owner: comment.owner,
+      date: comment.date,
+      type: 'public',
+      comment: comment.comment,
+    })
+  })
+  task.publicResponseComment.forEach((comment) => {
+    newTimeline.push({
+      id: comment.id,
+      fileName: '',
+      owner: comment.owner,
+      date: comment.date,
+      type: 'response',
+      comment: comment.comment,
+    })
+  })
+  task.files.forEach((album) => {
+    album.files.forEach((file) => {
+      newTimeline.push({
+        id: file.id,
+        fileName: file.name,
+        owner: file.owner,
+        date: file.date,
+        type: 'file',
+        comment: '',
+      })
+    })
+  })
+  newTimeline.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+
+  task.timeline = newTimeline
+}
+async function commentAdded(task: UserTask) {
+  await fetchTasks()
+  const updatedTask = tasks.value.find((t) => t.id === task.id)
+
+  if (updatedTask) {
+    calculateTimeLine(updatedTask)
+  }
+  tasks.value = [...tasks.value]
+}
 onMounted(fetchTasks)
 </script>
 
@@ -53,35 +115,52 @@ onMounted(fetchTasks)
     <div v-if="!loading && !tasks.length" class="alert">No hay tareas disponibles</div>
 
     <!-- TABLE -->
-    <div v-if="tasks.length" class="table-responsive">
-      <table class="table table-striped table-bordered">
-        <thead>
+    <table v-if="tasks.length" class="table table-striped table-bordered">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Nombre</th>
+          <th>Estado</th>
+          <th>Inicio</th>
+          <th>Actualización</th>
+          <th>💬</th>
+          <th>📎</th>
+          <th></th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <template v-for="task in tasks" :key="task.id">
           <tr>
-            <th>ID</th>
-            <th>Nombre</th>
-            <th>Estado</th>
-            <th>Fecha inicio</th>
-            <th>Última actualización</th>
-            <th>Comentario</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-for="task in tasks" :key="task.id">
             <td>{{ task.id }}</td>
             <td>{{ task.name }}</td>
+
             <td>
-              <span class="label label-info">{{ task.status }}</span>
+              <span class="label label-info">
+                {{ task.status }}
+              </span>
             </td>
-            <td>{{ task.startAt }}</td>
-            <td>{{ task.updatedAt }}</td>
+
+            <td>{{ formatDate(task.startAt) }}</td>
+            <td>{{ formatDate(task.updatedAt) }}</td>
+
+            <td>{{ task.publicComment.length }}</td>
+            <td>{{ task.files.length }}</td>
+
             <td>
-              <span v-if="task.publicComment">{{ task.publicComment }}</span>
-              <span v-else class="muted">Sin comentarios</span>
+              <a class="btn btn-mini" @click="toggle(task)">Ver</a>
             </td>
           </tr>
-        </tbody>
-      </table>
-    </div>
+
+          <!-- expanded row -->
+          <tr v-if="expanded === task.id">
+            <td colspan="8" v-if="task.timeline">
+              <TaskTimeline :timeline="task.timeline" :task="task" @comment-added="commentAdded" />
+            </td>
+          </tr>
+        </template>
+      </tbody>
+    </table>
   </article>
 </template>
 

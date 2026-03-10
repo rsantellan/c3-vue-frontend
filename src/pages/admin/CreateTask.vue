@@ -30,7 +30,12 @@
           </select>
         </div>
       </div>
-
+      <div class="control-group">
+        <label class="control-label">Comentario</label>
+        <div class="controls">
+          <textarea v-model="comment" class="input-xlarge" required></textarea>
+        </div>
+      </div>
       <!-- SUBMIT -->
       <div class="control-group">
         <div class="controls">
@@ -71,6 +76,7 @@ import type { CreateTaskResponse } from '@/types/task'
 const tasks = ref<PublicTask[]>([])
 const selectedTaskId = ref<number | ''>('')
 const selectedClient = ref<any | null>(null)
+const comment = ref<string>('')
 
 const loading = ref(false)
 const error = ref<string | null>(null)
@@ -103,6 +109,7 @@ async function handleSubmit() {
       taskId: selectedTaskId.value,
       folder: selectedClient.value.folderNumber,
       createdBy: user.value?.username || '',
+      comment: comment.value || '',
     })
 
     result.value = response
