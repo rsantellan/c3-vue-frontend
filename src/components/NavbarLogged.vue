@@ -9,9 +9,17 @@
           <li :class="{ active: isActive('/admin/news') }">
             <router-link to="/admin/news">Noticias</router-link>
           </li>
+          <li class="dropdown" :class="{ active: isAccountsActive }">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown">Cuentas Corrientes</a>
 
-          <li :class="{ active: isActive('/admin/accounts') }">
-            <router-link to="/admin/accounts">Cuentas Corrientes</router-link>
+            <ul class="dropdown-menu">
+              <li :class="{ active: isActive('/admin/accounts') }">
+                <router-link to="/admin/accounts">Mes actual</router-link>
+              </li>
+              <li :class="{ active: isActive('/admin/accounts-date-range') }">
+                <router-link to="/admin/accounts-date-range">Rango de fechas</router-link>
+              </li>
+            </ul>
           </li>
 
           <li :class="{ active: isActive('/admin/monthAmount') }">
@@ -132,5 +140,8 @@ function logout() {
 
 const isTasksActive = computed(() => {
   return ['/admin/createTask', '/admin/viewTasks'].some((path) => route.path.startsWith(path))
+})
+const isAccountsActive = computed(() => {
+  return ['/admin/accounts', '/admin/accounts-date-range'].some((path) => route.path.startsWith(path))
 })
 </script>

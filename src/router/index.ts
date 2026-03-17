@@ -2,20 +2,21 @@ import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router'
 
 import { token, user } from '@/auth'
 
-import Home from '../pages/Home.vue'
-import Infraestructura from '../pages/Infraestructura.vue'
-import Contabilidad from '../pages/Contabilidad.vue'
-import Seguridad from '../pages/Seguridad.vue'
-import Asesoramientos from '../pages/Asesoramientos.vue'
-import Auditoria from '../pages/Auditoria.vue'
-import ServicioNotarial from '../pages/ServicioNotarial.vue'
-import Contacto from '../pages/Contacto.vue'
+import Home from '@/pages/Home.vue'
+import Infraestructura from '@/pages/Infraestructura.vue'
+import Contabilidad from '@/pages/Contabilidad.vue'
+import Seguridad from '@/pages/Seguridad.vue'
+import Asesoramientos from '@/pages/Asesoramientos.vue'
+import Auditoria from '@/pages/Auditoria.vue'
+import ServicioNotarial from '@/pages/ServicioNotarial.vue'
+import Contacto from '@/pages/Contacto.vue'
 
-import Dashboard from '../pages/Dashboard.vue'
-import News from '../pages/admin/News.vue'
-import Accounts from '../pages/admin/Accounts.vue'
-import MonthAmount from '../pages/admin/MonthAmount.vue'
-import YearExpiration from '../pages/admin/YearExpiration.vue'
+import Dashboard from '@/pages/Dashboard.vue'
+import News from '@/pages/admin/News.vue'
+import Accounts from '@/pages/admin/Accounts.vue'
+import AccountsRange from '@/pages/admin/AccountsRange.vue'
+import MonthAmount from '@/pages/admin/MonthAmount.vue'
+import YearExpiration from '@/pages/admin/YearExpiration.vue'
 import CreateTask from '@/pages/admin/CreateTask.vue'
 import ViewTasks from '@/pages/admin/ViewTasks.vue'
 import View from '@/pages/admin/profile/View.vue'
@@ -52,6 +53,7 @@ const routes: RouteRecordRaw[] = [
   { path: '/admin', component: Dashboard, meta: { requiresAuth: true } },
   { path: '/admin/news', component: News, meta: { requiresAuth: true } },
   { path: '/admin/accounts', component: Accounts, meta: { requiresAuth: true } },
+  { path: '/admin/accounts-date-range', component: AccountsRange, meta: { requiresAuth: true } },
   { path: '/admin/monthAmount', component: MonthAmount, meta: { requiresAuth: true } },
   { path: '/admin/yearExpiration', component: YearExpiration, meta: { requiresAuth: true } },
   { path: '/admin/createTask', component: CreateTask, meta: { requiresAuth: true } },

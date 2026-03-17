@@ -1,7 +1,7 @@
 <template>
   <article class="main">
     <div class="hgroup">
-      <h1>Cuentas entre {{ previousMonthName }} y {{ currentMonthName }} de {{ currentYear }}</h1>
+      <h1>Buscar rango de fechas en cuentas</h1>
     </div>
     <div>
       <div v-if="allowedClients.length === 0">No hay clientes con permisos</div>
@@ -29,8 +29,22 @@
               />
             </div>
           </div>
+          <div class="control-group">
+            <label class="control-label required">Desde</label>
 
-          <div class="control-group" v-show="false">
+            <div class="controls">
+              <input type="date" v-model="dateFrom" />
+            </div>
+          </div>
+
+          <div class="control-group">
+            <label class="control-label required">Hasta</label>
+
+            <div class="controls">
+              <input type="date" v-model="dateTo" />
+            </div>
+          </div>
+          <div class="control-group">
             <div class="controls">
               <button class="btn btn-contact" type="submit">Buscar</button>
             </div>
@@ -39,25 +53,20 @@
       </div>
     </div>
     <template v-for="clientId in selectedClientIds" :key="clientId">
-      <div v-if="loading[clientId]">Cargando...</div>
-
-      <div v-else-if="errors[clientId]">
-        {{ errors[clientId] }}
-      </div>
-      <ClientAccountList v-else :accounts="accounts[clientId] || []" />
+      <ClientAccountList v-if="accounts[clientId]" :accounts="accounts[clientId]" :client-id="clientId" />
     </template>
   </article>
 </template>
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue'
-import { api } from '@/services/api'
 import { clients } from '@/auth'
+import { api } from '@/services/api'
 
 import ClientAccountList from '@/components/ClientAccountList.vue'
-import type { NormalizedAccounts } from '@/types/accounts'
 
 import Multiselect from 'vue-multiselect'
 import 'vue-multiselect/dist/vue-multiselect.css'
+import { NormalizedAccounts } from '@/types/accounts'
 
 const selectedClients = ref<any[]>([])
 
@@ -68,35 +77,46 @@ const allowedClients = computed(() => {
 
 const selectedClientIds = computed(() => selectedClients.value.map((c) => c.id))
 
-const accounts = ref<Record<number, NormalizedAccounts>>({})
-const loading = ref<Record<number, boolean>>({})
-const errors = ref<Record<number, string | null>>({})
-
+// Date data
 const now = new Date()
 
 const month = ref<number>(now.getMonth() + 1)
 const year = ref<number>(now.getFullYear())
 
-const months = [
-  'Enero',
-  'Febrero',
-  'Marzo',
-  'Abril',
-  'Mayo',
-  'Junio',
-  'Julio',
-  'Agosto',
-  'Septiembre',
-  'Octubre',
-  'Noviembre',
-  'Diciembre',
-]
-const currentMonthName = computed(() => months[now.getMonth()])
-const previousMonthName = computed(() => months[(now.getMonth() + 11) % 12])
-const currentYear = now.getFullYear()
+function toIsoDate(date: Date): string {
+  return date.toISOString().slice(0, 10)
+}
+
+const today = new Date()
+
+const start = new Date(today)
+start.setMonth(start.getMonth() - 12)
+
+const end = new Date(today)
+end.setMonth(end.getMonth() + 3)
+
+const dateFrom = ref<string>(toIsoDate(start))
+const dateTo = ref<string>(toIsoDate(end))
+
+const loading = ref(false)
+const error = ref<string | null>(null)
+
+// Response data
+const accounts = ref<Record<number, NormalizedAccounts>>({})
 
 async function handleSearch() {
   if (!selectedClientIds.value.length) return
+  loading.value = true
+
+  try {
+    accounts.value = await api.retrieveAccountsRange({
+      clients: selectedClientIds.value,
+      from: dateFrom.value,
+      to: dateTo.value,
+    })
+  } finally {
+    loading.value = false
+  }
 }
 
 watch(
@@ -108,37 +128,4 @@ watch(
   },
   { immediate: true },
 )
-
-watch(
-  selectedClientIds,
-  (ids) => {
-    ids.forEach((id) => {
-      if (!accounts.value[id]) {
-        loadAccountsForClient(id)
-      }
-    })
-  },
-  { immediate: true },
-)
-
-async function loadAccountsForClient(clientId: number) {
-  if (loading.value[clientId]) return
-
-  loading.value[clientId] = true
-  errors.value[clientId] = null
-
-  try {
-    const data = await api.retrieveAccounts({
-      clients: [clientId],
-      month: month.value,
-      year: year.value,
-    })
-
-    accounts.value[clientId] = data
-  } catch (e) {
-    errors.value[clientId] = 'Error cargando cuentas'
-  } finally {
-    loading.value[clientId] = false
-  }
-}
 </script>

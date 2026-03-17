@@ -5,9 +5,9 @@ import { mapClient } from '@/mappers/clientMapper'
 import { mapAccounts } from '@/mappers/accountMapper'
 import type { LoginResponse } from '@/types/auth'
 import { ClientResponse } from '@/types/client'
-import type { AccountsRequest, AccountsResponse } from '@/types/accounts'
+import type { AccountsRequest, AccountsRangeRequest, AccountsResponse, NormalizedAccounts } from '@/types/accounts'
 
-import type { MonthAmountResponse, NormalizedMonthAmount } from '@/types/monthAmount'
+import type { MonthAmountResponse } from '@/types/monthAmount'
 import { mapMonthAmount } from '@/mappers/monthAmountMapper'
 import { ClientExpirationResponse } from '@/types/yearExpiration'
 import { mapExpiration } from '@/mappers/yearExpirationMapper'
@@ -179,6 +179,24 @@ export const api = {
       }
 
       return mapAccounts(data.data)
+    })
+  },
+
+  retrieveAccountsRange(payload: AccountsRangeRequest) {
+    return request('/account-data-date-range', {
+      method: 'POST',
+      body: JSON.stringify(payload),
+    }).then((data) => {
+      const result: Record<number, NormalizedAccounts> = {}
+      console.log(data)
+      Object.entries(data).forEach(([clientId, info]: any) => {
+        if (!info.isvalid) return
+        console.log(clientId)
+        console.log(info)
+        result[clientId] = mapAccounts(info.data)
+      })
+
+      return result
     })
   },
 

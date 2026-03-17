@@ -1,7 +1,5 @@
 <template>
-  <div v-if="loading" class="loader">Cargando cuentas...</div>
-  <div v-else-if="error">{{ error }}</div>
-  <div v-else>
+  <div>
     <section v-if="accounts">
       <div class="table-list">
         <div class="item">
@@ -125,17 +123,11 @@ import { api } from '@/services/api'
 import type { NormalizedAccounts } from '@/types/accounts'
 
 interface Props {
-  month: number
-  year: number
-  id: number
+  accounts: NormalizedAccounts
 }
 const props = defineProps<Props>()
 
-const accounts = ref<NormalizedAccounts | null>(null)
-const loading = ref(false)
-const error = ref<string | null>(null)
-
-const clientEntries = computed(() => accounts.value?.clients ?? [])
+const clientEntries = computed(() => props.accounts.clients ?? [])
 
 // FORMATTERS
 function formatAmount(amount: number): string | number {
@@ -153,36 +145,6 @@ function formatDate(date: string): string {
     year: 'numeric',
   })
 }
-
-async function loadAccounts(ids: number[]) {
-  if (!ids.length) return
-  if (loading.value) return
-  loading.value = true
-  error.value = null
-
-  try {
-    accounts.value = await api.retrieveAccounts({
-      clients: ids,
-      month: props.month,
-      year: props.year,
-    })
-  } catch (e) {
-    error.value = 'Error cargando cuentas'
-  } finally {
-    loading.value = false
-  }
-}
-
-onMounted(() => {
-  loadAccounts([props.id])
-})
-
-watch(
-  () => [props.id, props.month, props.year],
-  () => {
-    loadAccounts([props.id])
-  },
-)
 </script>
 <style>
 .loader {

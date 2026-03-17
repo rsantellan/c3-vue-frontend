@@ -53,3 +53,9 @@ export interface NormalizedAccounts {
   clients: NormalizedClientAccount[]
   totals: AccountSaldo
 }
+
+export interface AccountsRangeRequest {
+  clients: number[]
+  from: string
+  to: string
+}
