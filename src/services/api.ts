@@ -177,7 +177,7 @@ export const api = {
       if (!data.success) {
         throw new Error('ACCOUNTS_ERROR')
       }
-
+      console.log(data)
       return mapAccounts(data.data)
     })
   },
@@ -186,17 +186,11 @@ export const api = {
     return request('/account-data-date-range', {
       method: 'POST',
       body: JSON.stringify(payload),
-    }).then((data) => {
-      const result: Record<number, NormalizedAccounts> = {}
-      console.log(data)
-      Object.entries(data).forEach(([clientId, info]: any) => {
-        if (!info.isvalid) return
-        console.log(clientId)
-        console.log(info)
-        result[clientId] = mapAccounts(info.data)
-      })
-
-      return result
+    }).then((data: AccountsResponse) => {
+      if (!data.success) {
+        throw new Error('ACCOUNTS_ERROR')
+      }
+      return mapAccounts(data.data)
     })
   },
 

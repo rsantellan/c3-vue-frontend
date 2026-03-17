@@ -52,9 +52,13 @@
         </form>
       </div>
     </div>
-    <template v-for="clientId in selectedClientIds" :key="clientId">
-      <ClientAccountList v-if="accounts[clientId]" :accounts="accounts[clientId]" :client-id="clientId" />
-    </template>
+    <div>
+      <div v-if="loading">Cargando...</div>
+      <div v-else-if="errors">
+        {{ errors }}
+      </div>
+      <ClientAccountList v-else-if="accounts" :accounts="accounts" :client-id="0" />
+    </div>
   </article>
 </template>
 <script setup lang="ts">
@@ -99,10 +103,10 @@ const dateFrom = ref<string>(toIsoDate(start))
 const dateTo = ref<string>(toIsoDate(end))
 
 const loading = ref(false)
-const error = ref<string | null>(null)
+const errors = ref<string | null>(null)
 
 // Response data
-const accounts = ref<Record<number, NormalizedAccounts>>({})
+const accounts = ref<NormalizedAccounts>()
 
 async function handleSearch() {
   if (!selectedClientIds.value.length) return
