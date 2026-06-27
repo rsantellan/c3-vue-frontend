@@ -12,7 +12,11 @@ const error = ref<string | null>(null)
 const expanded = ref<number | null>(null)
 
 function formatDate(date: string): string {
-  return new Date(date).toLocaleDateString('es-UY', {
+  const [day, month, year] = date.split('/').map(Number)
+
+  const parsedDate = new Date(year, month - 1, day)
+
+  return parsedDate.toLocaleDateString('es-UY', {
     day: 'numeric',
     month: 'short',
     year: 'numeric',
@@ -145,7 +149,9 @@ onMounted(fetchTasks)
             <td>{{ formatDate(task.updatedAt) }}</td>
 
             <td>{{ task.publicComment.length }}</td>
-            <td>{{ task.files.length }}</td>
+            <td>
+              {{ task.files.reduce((total, group) => total + group.files.length, 0) }}
+            </td>
 
             <td>
               <a class="btn btn-mini" @click="toggle(task)">Ver</a>

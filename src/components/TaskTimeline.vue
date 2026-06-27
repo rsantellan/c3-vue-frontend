@@ -45,6 +45,21 @@
       </button>
     </form>
   </div>
+  <div class="add-file">
+    <h5>Agregar archivos</h5>
+
+    <input ref="fileInput" type="file" style="display: none" @change="onFileSelected" />
+
+    <button class="btn" @click="selectFile">Seleccionar archivo</button>
+
+    <span v-if="selectedFile">
+      {{ selectedFile.name }}
+    </span>
+
+    <button class="btn btn-primary" @click="uploadSelectedFile" :disabled="!selectedFile || saving">
+      Subir archivo
+    </button>
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -64,6 +79,13 @@ const emit = defineEmits(['comment-added'])
 const comment = ref('')
 const isPrivate = ref(false)
 const saving = ref(false)
+
+const fileInput = ref<HTMLInputElement | null>(null)
+const selectedFile = ref<File | null>(null)
+
+function selectFile() {
+  fileInput.value?.click()
+}
 
 function formatDate(date: string): string {
   return new Date(date).toLocaleDateString('es-UY', {
@@ -96,6 +118,39 @@ async function submitComment() {
     comment.value = ''
 
     emit('comment-added', props.task)
+  } finally {
+    saving.value = false
+  }
+}
+function onFileSelected(event: Event) {
+  const input = event.target as HTMLInputElement
+
+  if (input.files && input.files.length > 0) {
+    selectedFile.value = input.files[0]
+  }
+}
+
+async function uploadSelectedFile() {
+  if (!selectedFile.value) {
+    return
+  }
+
+  saving.value = true
+
+  try {
+    const formData = new FormData()
+    formData.append('file', selectedFile.value)
+
+    const response = await api.addFileToTask(props.task.id, formData)
+
+    if (response.success) {
+      emit('comment-added', props.task)
+    }
+    selectedFile.value = null
+
+    if (fileInput.value) {
+      fileInput.value.value = ''
+    }
   } finally {
     saving.value = false
   }

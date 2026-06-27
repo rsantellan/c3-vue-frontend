@@ -31,20 +31,23 @@ import { mapApiUser, mapAdminClient } from '@/mappers/apiUserMapper'
 
 const API_URL = import.meta.env.VITE_API_URL
 
-function getHeaders(): HeadersInit {
+function getHeaders(body?: BodyInit | null): HeadersInit {
   const token = localStorage.getItem('token')
-
-  return {
-    'Content-Type': 'application/json',
-    ...(token ? { Authorization: `Bearer ${token}` } : {}),
+  const headers: Record<string, string> = {
+    Authorization: `Bearer ${token}`,
   }
+  if (!(body instanceof FormData)) {
+    headers['Content-Type'] = 'application/json'
+  }
+
+  return headers
 }
 
 async function request(endpoint: string, options: RequestInit = {}) {
   const response = await fetch(`${API_URL}${endpoint}`, {
     ...options,
     headers: {
-      ...getHeaders(),
+      ...getHeaders(options.body),
       ...(options.headers || {}),
     },
   })
@@ -599,6 +602,15 @@ export const api = {
     return request('/add-comment-to-task', {
       method: 'POST',
       body: JSON.stringify(payload),
+    }).then((data: any) => {
+      return data
+    })
+  },
+
+  addFileToTask(taskId: number, formData: FormData) {
+    return request(`/add-file-to-task/${taskId}`, {
+      method: 'POST',
+      body: formData,
     }).then((data: any) => {
       return data
     })
