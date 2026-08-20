@@ -36,6 +36,12 @@
           <textarea v-model="comment" class="input-xlarge" required></textarea>
         </div>
       </div>
+      <div class="control-group">
+        <label class="control-label">Link publico</label>
+        <div class="controls">
+          <input type="text" v-model="url" class="input-xlarge"></input>
+        </div>
+      </div>
       <!-- SUBMIT -->
       <div class="control-group">
         <div class="controls">
@@ -77,6 +83,7 @@ const tasks = ref<PublicTask[]>([])
 const selectedTaskId = ref<number | ''>('')
 const selectedClient = ref<any | null>(null)
 const comment = ref<string>('')
+const url = ref<string>('')
 
 const loading = ref(false)
 const error = ref<string | null>(null)
@@ -110,6 +117,7 @@ async function handleSubmit() {
       folder: selectedClient.value.folderNumber,
       createdBy: user.value?.username || '',
       comment: comment.value || '',
+      url: url.value || '',
     })
 
     result.value = response

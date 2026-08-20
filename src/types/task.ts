@@ -3,6 +3,7 @@ export interface CreateTaskRequest {
   createdBy: string
   taskId: number
   comment: string
+  url: string
 }
 
 export interface CreateTaskResponse {
