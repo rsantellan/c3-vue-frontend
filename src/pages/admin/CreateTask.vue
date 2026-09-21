@@ -5,6 +5,19 @@
     </div>
 
     <form class="form-horizontal" @submit.prevent="handleSubmit">
+      <!-- CLIENT -->
+      <div class="control-group">
+        <label class="control-label">Cliente</label>
+        <div class="controls">
+          <select v-model="selectedClient" class="input-xlarge" required>
+            <option disabled value="">Seleccione un cliente</option>
+            <option v-for="client in allowedClients" :key="client.id" :value="client">
+              {{ client.socialReason }} ({{ client.folderNumber }})
+            </option>
+          </select>
+        </div>
+      </div>
+
       <!-- TASK -->
       <div class="control-group">
         <label class="control-label">Tarea</label>
@@ -18,18 +31,6 @@
         </div>
       </div>
 
-      <!-- CLIENT -->
-      <div class="control-group">
-        <label class="control-label">Cliente</label>
-        <div class="controls">
-          <select v-model="selectedClient" class="input-xlarge" required>
-            <option disabled value="">Seleccione un cliente</option>
-            <option v-for="client in allowedClients" :key="client.id" :value="client">
-              {{ client.socialReason }} ({{ client.folderNumber }})
-            </option>
-          </select>
-        </div>
-      </div>
       <div class="control-group">
         <label class="control-label">Comentario</label>
         <div class="controls">
@@ -39,7 +40,14 @@
       <div class="control-group">
         <label class="control-label">Link publico</label>
         <div class="controls">
-          <input type="text" v-model="url" class="input-xlarge"></input>
+          <input type="text" v-model="url" class="input-xlarge" />
+        </div>
+      </div>
+      <!-- DATE -->
+      <div class="control-group">
+        <label class="control-label">Fecha</label>
+        <div class="controls">
+          <input v-model="date" type="date" class="input-xlarge" required />
         </div>
       </div>
       <!-- SUBMIT -->
@@ -75,15 +83,16 @@
 import { ref, computed, onMounted } from 'vue'
 import { api } from '@/services/api'
 import { user, clients } from '@/auth'
-import type { PublicTask } from '@/types/task'
-import type { CreateTaskResponse } from '@/types/task'
+import type { PublicTask, CreateTaskResponse, ClientAvailableTasks } from '@/types/task'
 
 // state
-const tasks = ref<PublicTask[]>([])
+//const tasks = ref<PublicTask[]>([])
+const userClientTasks = ref<ClientAvailableTasks[]>([])
 const selectedTaskId = ref<number | ''>('')
 const selectedClient = ref<any | null>(null)
 const comment = ref<string>('')
 const url = ref<string>('')
+const date = ref<string>(new Date().toISOString().split('T')[0])
 
 const loading = ref(false)
 const error = ref<string | null>(null)
@@ -94,10 +103,22 @@ const allowedClients = computed(() => {
   return clients.value
 })
 
+const tasks = computed<PublicTask[]>(() => {
+  console.log(selectedClient.value)
+  if (!selectedClient.value) {
+    return []
+  }
+
+  const clientTasks = userClientTasks.value.find((item) => item.clientId === selectedClient.value.id)
+  console.log(clientTasks)
+  return clientTasks?.create ?? []
+})
+
 // load tasks
 onMounted(async () => {
   try {
-    tasks.value = await api.getPublicTasks()
+    userClientTasks.value = await api.getUserClientTasks()
+    console.log(userClientTasks.value)
   } catch {
     error.value = 'Error cargando tareas'
   }
@@ -118,6 +139,7 @@ async function handleSubmit() {
       createdBy: user.value?.username || '',
       comment: comment.value || '',
       url: url.value || '',
+      date: date.value,
     })
 
     result.value = response

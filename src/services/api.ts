@@ -11,7 +11,15 @@ import type { MonthAmountResponse } from '@/types/monthAmount'
 import { mapMonthAmount } from '@/mappers/monthAmountMapper'
 import { ClientExpirationResponse } from '@/types/yearExpiration'
 import { mapExpiration } from '@/mappers/yearExpirationMapper'
-import { CreateTaskRequest, CreateTaskResponse, PublicTask, RetrieveUserTasksRequest, UserTask } from '@/types/task'
+import {
+  ApiResponse,
+  CreateTaskRequest,
+  CreateTaskResponse,
+  PublicTask,
+  RetrieveUserTasksRequest,
+  UserTask,
+  ClientAvailableTasks,
+} from '@/types/task'
 import { ChangePasswordPayload, UpdateProfilePayload } from '@/types/profile'
 
 import type {
@@ -233,11 +241,30 @@ export const api = {
       return data
     })
   },
+
   getPublicTasks() {
     return request('/get-public-available-tasks', {
       method: 'GET',
     }).then((data: PublicTask[]) => {
       return data
+    })
+  },
+
+  getUserClientTasks(): Promise<ClientAvailableTasks[]> {
+    return request('/get-user-available-tasks', {
+      method: 'GET',
+    }).then((data: ApiResponse) => {
+      return Object.entries(data).map(([clientId, client]) => ({
+        clientId: Number(client.id),
+        create: Object.entries(client.tasks.create).map(([id, name]) => ({
+          id: Number(id),
+          name: name as string,
+        })),
+        view: Object.entries(client.tasks.view).map(([id, name]) => ({
+          id: Number(id),
+          name: name as string,
+        })),
+      }))
     })
   },
 

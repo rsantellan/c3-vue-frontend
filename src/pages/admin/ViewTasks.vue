@@ -123,6 +123,7 @@ onMounted(fetchTasks)
       <thead>
         <tr>
           <th>ID</th>
+          <th>Cliente</th>
           <th>Nombre</th>
           <th>Estado</th>
           <th>Inicio</th>
@@ -137,8 +138,8 @@ onMounted(fetchTasks)
         <template v-for="task in tasks" :key="task.id">
           <tr>
             <td>{{ task.id }}</td>
+            <td>{{ task.client }}</td>
             <td>{{ task.name }}</td>
-
             <td>
               <span class="label label-info">
                 {{ task.status }}

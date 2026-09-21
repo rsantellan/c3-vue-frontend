@@ -4,6 +4,7 @@ export interface CreateTaskRequest {
   taskId: number
   comment: string
   url: string
+  date: string
 }
 
 export interface CreateTaskResponse {
@@ -22,6 +23,8 @@ export interface PublicTask {
 export interface UserTask {
   id: number
   name: string
+  client?: string
+  folder?: string
   status: string
   startAt: string
   updatedAt: string
@@ -63,3 +66,21 @@ export interface TaskTimeLine {
   type: string
   comment: string
 }
+
+export interface ClientAvailableTasks {
+  clientId: number
+  create: PublicTask[]
+  view: PublicTask[]
+}
+
+export interface ApiClientTasks {
+  id: number
+  folder: string
+  name: string
+  tasks: {
+    create: Record<string, string>
+    view: Record<string, string>
+  }
+}
+
+export type ApiResponse = Record<string, ApiClientTasks>
