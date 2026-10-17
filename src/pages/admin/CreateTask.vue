@@ -139,7 +139,7 @@ async function handleSubmit() {
       createdBy: user.value?.username || '',
       comment: comment.value || '',
       url: url.value || '',
-      date: date.value,
+      finishDate: date.value,
     })
 
     result.value = response

@@ -128,6 +128,7 @@ onMounted(fetchTasks)
           <th>Estado</th>
           <th>Inicio</th>
           <th>Actualización</th>
+          <th>Finaliza</th>
           <th>💬</th>
           <th>📎</th>
           <th></th>
@@ -148,6 +149,7 @@ onMounted(fetchTasks)
 
             <td>{{ formatDate(task.startAt) }}</td>
             <td>{{ formatDate(task.updatedAt) }}</td>
+            <td>{{ formatDate(task.finishAt) }}</td>
 
             <td>{{ task.publicComment.length }}</td>
             <td>

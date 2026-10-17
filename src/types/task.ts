@@ -4,7 +4,7 @@ export interface CreateTaskRequest {
   taskId: number
   comment: string
   url: string
-  date: string
+  finishDate: string
 }
 
 export interface CreateTaskResponse {
@@ -28,6 +28,7 @@ export interface UserTask {
   status: string
   startAt: string
   updatedAt: string
+  finishAt: string
   publicComment: TaskComment[]
   publicResponseComment: TaskComment[]
   files: TaskAlbum[]
