@@ -13,6 +13,19 @@ export interface CreateTaskResponse {
   createdBy: string
   clientId: number
   clientTaskId: number
+  files?: TaskFileResult[]
+}
+
+export interface TaskFileResult {
+  name: string
+  success: boolean
+  message: string
+}
+
+export interface AddFilesToTaskResponse {
+  success: boolean
+  message: string
+  files?: TaskFileResult[]
 }
 
 export interface PublicTask {

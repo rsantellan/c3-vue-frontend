@@ -37,6 +37,9 @@
               <li :class="{ active: isActive('/admin/createTask') }">
                 <router-link to="/admin/createTask">Crear tarea</router-link>
               </li>
+              <li :class="{ active: isActive('/admin/CreateTaskWithFile') }">
+                <router-link to="/admin/CreateTaskWithFile">Crear tarea con archivo</router-link>
+              </li>
               <li :class="{ active: isActive('/admin/viewTasks') }">
                 <router-link to="/admin/viewTasks">Ver tarea</router-link>
               </li>

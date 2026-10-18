@@ -15,6 +15,7 @@ import {
   ApiResponse,
   CreateTaskRequest,
   CreateTaskResponse,
+  AddFilesToTaskResponse,
   PublicTask,
   RetrieveUserTasksRequest,
   UserTask,
@@ -237,6 +238,22 @@ export const api = {
     return request('/create-client-task', {
       method: 'POST',
       body: JSON.stringify(payload),
+    }).then((data: CreateTaskResponse) => {
+      return data
+    })
+  },
+
+  createTaskToClientWithFile(payload: CreateTaskRequest, files: File[] = []) {
+    const formData = new FormData()
+    formData.append('taskId', String(payload.taskId))
+    formData.append('folder', payload.folder)
+    formData.append('comment', payload.comment)
+    formData.append('url', payload.url)
+    formData.append('finishDate', payload.finishDate)
+    files.forEach((file) => formData.append('files[]', file))
+    return request('/create-client-task-with-file', {
+      method: 'POST',
+      body: formData,
     }).then((data: CreateTaskResponse) => {
       return data
     })
@@ -630,6 +647,17 @@ export const api = {
       method: 'POST',
       body: JSON.stringify(payload),
     }).then((data: any) => {
+      return data
+    })
+  },
+
+  addFilesToTask(taskId: number, files: File[]) {
+    const formData = new FormData()
+    files.forEach((file) => formData.append('files[]', file))
+    return request(`/add-files-to-task/${taskId}`, {
+      method: 'POST',
+      body: formData,
+    }).then((data: AddFilesToTaskResponse) => {
       return data
     })
   },

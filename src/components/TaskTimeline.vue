@@ -48,16 +48,18 @@
   <div class="add-file">
     <h5>Agregar archivos</h5>
 
-    <input ref="fileInput" type="file" style="display: none" @change="onFileSelected" />
+    <input ref="fileInput" type="file" style="display: none" :multiple="multipleFiles" @change="onFileSelected" />
 
-    <button class="btn" @click="selectFile">Seleccionar archivo</button>
+    <button class="btn" @click="selectFile">
+      {{ multipleFiles ? 'Seleccionar archivos' : 'Seleccionar archivo' }}
+    </button>
 
-    <span v-if="selectedFile">
-      {{ selectedFile.name }}
+    <span v-if="selectedFiles.length > 0">
+      {{ selectedFiles.map((file) => file.name).join(', ') }}
     </span>
 
-    <button class="btn btn-primary" @click="uploadSelectedFile" :disabled="!selectedFile || saving">
-      Subir archivo
+    <button class="btn btn-primary" @click="uploadSelectedFile" :disabled="selectedFiles.length === 0 || saving">
+      {{ multipleFiles ? 'Subir archivos' : 'Subir archivo' }}
     </button>
   </div>
 </template>
@@ -70,8 +72,10 @@ import { user } from '@/auth'
 interface Props {
   timeline: TaskTimeLine[]
   task: UserTask
+  // true: several files at once (add-files-to-task), false: one file (add-file-to-task, the old endpoint)
+  multipleFiles?: boolean
 }
-const props = defineProps<Props>()
+const props = withDefaults(defineProps<Props>(), { multipleFiles: true })
 
 const timeline = ref<TaskTimeLine[]>(props.timeline)
 const emit = defineEmits(['comment-added'])
@@ -81,7 +85,7 @@ const isPrivate = ref(false)
 const saving = ref(false)
 
 const fileInput = ref<HTMLInputElement | null>(null)
-const selectedFile = ref<File | null>(null)
+const selectedFiles = ref<File[]>([])
 
 function selectFile() {
   fileInput.value?.click()
@@ -125,28 +129,37 @@ async function submitComment() {
 function onFileSelected(event: Event) {
   const input = event.target as HTMLInputElement
 
-  if (input.files && input.files.length > 0) {
-    selectedFile.value = input.files[0]
-  }
+  selectedFiles.value = input.files ? Array.from(input.files) : []
 }
 
 async function uploadSelectedFile() {
-  if (!selectedFile.value) {
+  if (selectedFiles.value.length === 0) {
     return
   }
 
   saving.value = true
 
   try {
-    const formData = new FormData()
-    formData.append('file', selectedFile.value)
+    let anyUploaded = false
 
-    const response = await api.addFileToTask(props.task.id, formData)
+    if (props.multipleFiles) {
+      const response = await api.addFilesToTask(props.task.id, selectedFiles.value)
+      anyUploaded = (response.files ?? []).some((item) => item.success)
+      const failed = (response.files ?? []).filter((item) => !item.success)
+      if (failed.length > 0) {
+        alert('No se pudieron subir los archivos: ' + failed.map((item) => item.name).join(', '))
+      }
+    } else {
+      const formData = new FormData()
+      formData.append('file', selectedFiles.value[0])
+      const response = await api.addFileToTask(props.task.id, formData)
+      anyUploaded = !!response.success
+    }
 
-    if (response.success) {
+    if (anyUploaded) {
       emit('comment-added', props.task)
     }
-    selectedFile.value = null
+    selectedFiles.value = []
 
     if (fileInput.value) {
       fileInput.value.value = ''

@@ -18,6 +18,7 @@ import AccountsRange from '@/pages/admin/AccountsRange.vue'
 import MonthAmount from '@/pages/admin/MonthAmount.vue'
 import YearExpiration from '@/pages/admin/YearExpiration.vue'
 import CreateTask from '@/pages/admin/CreateTask.vue'
+import CreateTaskWithFile from '@/pages/admin/CreateTaskWithFile.vue'
 import ViewTasks from '@/pages/admin/ViewTasks.vue'
 import View from '@/pages/admin/profile/View.vue'
 import Edit from '@/pages/admin/profile/Edit.vue'
@@ -57,6 +58,7 @@ const routes: RouteRecordRaw[] = [
   { path: '/admin/monthAmount', component: MonthAmount, meta: { requiresAuth: true } },
   { path: '/admin/yearExpiration', component: YearExpiration, meta: { requiresAuth: true } },
   { path: '/admin/createTask', component: CreateTask, meta: { requiresAuth: true } },
+  { path: '/admin/CreateTaskWithFile', component: CreateTaskWithFile, meta: { requiresAuth: true } },
   { path: '/admin/viewTasks', component: ViewTasks, meta: { requiresAuth: true } },
 
   { path: '/admin/user/profile', component: View, meta: { requiresAuth: true } },
